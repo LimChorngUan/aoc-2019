@@ -1,14 +1,25 @@
-module Day1 exposing (getRequiredFuel, getTotalFuel, parseAOCInput)
+module Day1 exposing (getRequiredFuel, getRequiredFuelRecursive, getTotalFuel, parseAOCInput)
 
 {-
   The Tyranny of the Rocket Equation: https://adventofcode.com/2019/day/1
-  Part 1:
-
   To find the fuel required for a module, take its mass, divide by three, round down, and subtract 2.
 -}
 getRequiredFuel : Int -> Int
 getRequiredFuel mass =
     mass // 3 - 2
+
+{-
+  Fuel needs fuel too
+-}
+getRequiredFuelRecursive : Int -> Int
+getRequiredFuelRecursive mass =
+    let
+        fuelRequired = getRequiredFuel mass
+    in
+         if fuelRequired < 0 then
+            0
+         else
+            fuelRequired + getRequiredFuelRecursive fuelRequired
 
 
 {-
@@ -17,7 +28,7 @@ getRequiredFuel mass =
 -}
 getTotalFuel : List Int -> Int
 getTotalFuel moduleMasses =
-    List.map getRequiredFuel moduleMasses
+    List.map getRequiredFuelRecursive moduleMasses
       |> List.foldl (+) 0
 
 
